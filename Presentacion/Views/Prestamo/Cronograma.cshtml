@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Entidad.Cuota>
+
+@{
+    ViewBag.Title = "Cronograma";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.periodo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.saldo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.amortizacion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.interes)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.cuota)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.periodo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.saldo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.amortizacion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.interes)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.cuota)
+                    </td>
+                </tr>
+            }
+
+        </table>
+        <input type="submit" class="btn btn-block" value="Guardar préstamo" id="guardar" name="guardar" onclick="go()" />
+    </div>
