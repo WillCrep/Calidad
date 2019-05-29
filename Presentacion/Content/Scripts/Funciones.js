@@ -12,8 +12,8 @@ function go() {
         .then((willDelete) => {
             if (willDelete) {
                 //redirect
-                var url = '@Url.Action("GuardarCronograma","Cronograma")';
-                window.location.href = "/Cronograma/GuardarCronograma/";
+                var url = '@Url.Action("GuardarCronograma","Prestamo")';
+                window.location.href = "/Prestamo/GuardarCronograma/";
             }
         });
 }

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Entidad.Cuota>
+@{
+    ViewBag.Title = "ReaPago";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ReaPago</h2>
+
+<form action="BuscarCli" method="post">
+    <div>
+        <label for="dni">Ingrese DNI del Cliente</label>
+        <input type="text" placeholder="12459764" id="dni" name="dni" class="form-control col-md-2" />
+        <div>
+            <input type="submit" id="bus" name="bus" value="Buscar Cliente" class="btn btn-default" />
+        </div>
+    </div>
+</form>
+
+@if (ViewBag.exito == 1)
+
+    {
+        <div>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.periodo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.saldo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.amortizacion)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.interes)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.cuota)
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.periodo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.saldo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.amortizacion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.interes)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.cuota)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Index","Home")"><input type="button" class="btn btn-dark" value="Pagar Cuota" /></a>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+            <input type="submit" class="btn btn-dark" value="Guardar préstamo" id="guardar" name="guardar" onclick="go()" />
+        </div>
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+}
+

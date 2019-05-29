@@ -21,7 +21,7 @@ namespace Entidad
         [Required(ErrorMessage = "Este campo es Obligatorio")]
         public decimal cuota { get; set; }
         public Boolean estado { get; set; }
-        public DateTime fechPa { get; set; }
+        public DateTime fechaPa { get; set; }
         public Prestamo prestamo { get; set; }
     }
 }

@@ -19,6 +19,21 @@ namespace Logica
 
         #endregion Singleton
 
+        #region Listar Cuotas
+        public List<Cuota> LsCuotas(string dni)
+        {
+            try
+            {
+                return datCuota.Instancia.LsCuotas(dni);
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        #endregion Listar Cuotas
+
         #region Calculos de Cuotas
         private decimal calcularTasaEfectivaMensual(Prestamo prestamo)
         {
@@ -65,7 +80,7 @@ namespace Logica
                     cuota.cuota = 0;
                     cuota.interes = 0;
                     cuota.amortizacion = 0;
-                    cuota.fechPa = DateTime.Now;
+                    cuota.fechaPa = DateTime.Now;
                     cuotas.Add(cuota);
                 }
                 else
@@ -74,14 +89,14 @@ namespace Logica
                     cuotaT.saldo = cuotas[w - 1].saldo;
                     cuotaT.interes = cuotas[w - 1].interes;
                     cuotaT.amortizacion = cuotas[w - 1].amortizacion;
-                    cuotaT.fechPa = cuotas[w - 1].fechPa;
+                    cuotaT.fechaPa = cuotas[w - 1].fechaPa;
 
                     cuota.cuota = Math.Round(a, 3, MidpointRounding.AwayFromZero);
                     cuota.periodo = w;
                     cuota.interes = Math.Round(calcularInteres(i, cuotaT.saldo), 2, MidpointRounding.AwayFromZero);
                     cuota.amortizacion = Math.Round(calcularAmortizacion(a, cuota.interes), 2, MidpointRounding.AwayFromZero);
                     cuota.saldo = Math.Round(calcularSaldo(cuota.amortizacion, cuotaT.saldo), 2, MidpointRounding.AwayFromZero);
-                    cuota.fechPa = cuotaT.fechPa.AddMonths(1);
+                    cuota.fechaPa = cuotaT.fechaPa.AddMonths(1);
                     cuotas.Add(cuota);
                 }
             }
@@ -89,6 +104,7 @@ namespace Logica
         }
         #endregion Calculos de Cuotas
 
+        #region Registrar Cuotas
         public Boolean RegistrarCuotas(List<Cuota> cuotas)
         {
             try
@@ -101,5 +117,6 @@ namespace Logica
                 throw e;
             }
         }
+        #endregion Registrar Cuotas
     }
 }

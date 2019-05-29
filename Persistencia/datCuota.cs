@@ -39,7 +39,7 @@ namespace Persistencia
                     cmd.Parameters.AddWithValue("@prmtFloatAmortizacion", item.amortizacion);
                     cmd.Parameters.AddWithValue("@prmtFloatInteres", item.interes);
                     cmd.Parameters.AddWithValue("@prmtFloatCuota", item.cuota);
-                    cmd.Parameters.AddWithValue("@prmtDTFechPa", item.fechPa);
+                    cmd.Parameters.AddWithValue("@prmtDTFechPa", item.fechaPa);
                     cmd.Parameters.AddWithValue("@prmtIntPrestamoId", item.prestamo.idPres);
                     cn.Open();
                     int i = cmd.ExecuteNonQuery();
@@ -57,5 +57,42 @@ namespace Persistencia
         }
 
         #endregion Registrar Cuotas
+
+        #region Listar Cuotas
+        public List<Cuota> LsCuotas(string dni)
+        {
+            SqlCommand cmd = null;
+            List<Cuota> lista = new List<Cuota>();
+            try
+            {
+                SqlConnection cn = Conexion.Instancia.conectar();
+                cmd = new SqlCommand("LsCuotas", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@prmintDni", dni);
+                cn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    Cuota cuota = new Cuota();
+                    cuota.idCuo = Convert.ToInt32(dr["idCuo"]);
+                    cuota.interes = Convert.ToDecimal(dr["interes"]);
+                    cuota.amortizacion = Convert.ToDecimal(dr["amortizacion"]);
+                    cuota.cuota = Convert.ToDecimal(dr["cuota"]);
+                    cuota.estado = Convert.ToBoolean(dr["estado"]);
+                    cuota.fechaPa = Convert.ToDateTime(dr["fechaPa"]);
+                    cuota.periodo = Convert.ToInt32(dr["periodo"]);
+                    cuota.saldo = Convert.ToDecimal(dr["saldo"]);
+                    lista.Add(cuota);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally { cmd.Connection.Close(); }
+            return lista;
+        }
+        #endregion Listar Cuotas
     }
 }

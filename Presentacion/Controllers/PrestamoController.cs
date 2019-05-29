@@ -26,7 +26,7 @@ namespace Presentacion.Controllers
                 {
                     prestamo.fechaIni = DateTime.Now;
                     prestamo.fechaTerm = DateTime.Now.AddMonths(prestamo.cantCu);
-                    return RedirectToAction("Cronograma", "Cronograma", prestamo);
+                    return RedirectToAction("Cronograma", "Prestamo", prestamo);
                 }
                 else
                 {

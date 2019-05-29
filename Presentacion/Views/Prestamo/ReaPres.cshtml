@@ -22,7 +22,7 @@
         <p>Cliente @ViewBag.cliente.idCli @ViewBag.cliente.nombres @ViewBag.cliente.apellidos</p>
         if (ViewBag.valido)
         {
-            using (Html.BeginForm("Index", "Home", FormMethod.Post))
+            using (Html.BeginForm("ReaPres", "Prestamo", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
 
