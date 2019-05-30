@@ -211,6 +211,7 @@
     <Content Include="Views\Prestamo\ReaPres.cshtml" />
     <Content Include="Views\Prestamo\Cronograma.cshtml" />
     <Content Include="Views\Pago\ReaPago.cshtml" />
+    <Content Include="Views\Pago\FormPago.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

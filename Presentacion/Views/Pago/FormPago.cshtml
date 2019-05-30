@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "FormPago";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Pago</h2>
+
+@if (ViewBag.mora != 0)
+{
+    <div>
+        <p>El monto a pagar es de : @ViewBag.total</p>
+        <p>Con un aumento de @ViewBag.mora . Por tener deudas pendientes.</p>
+        <div class="form-group">
+            <label for="tEfectivo">Efectivo: </label>
+            <input type="text" class="form-control" id="tEfectivo" />
+        </div>
+        <div class="form-group">
+            <label for="tVuelto">Vuelto: </label>
+            <input type="text" class="form-control" id="tVuelto" />
+        </div>
+        <div class="form-group">
+            <a href="@Url.Action("PagarDeuda","Pago")"><input type="button" value="Pagar deuda" class="btn btn-dark"/></a>
+        </div>
+    </div>
+}
+else
+{
+    <div>
+        <p>El monto a pagar es de : @ViewBag.total</p>
+        <div class="form-group">
+            <label for="tEfectivo">Efectivo: </label>
+            <input type="text" class="form-control" id="tEfectivo" />
+        </div>
+        <div class="form-group">
+            <label for="tVuelto">Vuelto: </label>
+            <input type="text" class="form-control" id="tVuelto" />
+        </div>
+        <div class="form-group">
+            <a href="@Url.Action("PagarDeuda","Pago")"><input type="button" value="Pagar deuda" class="btn btn-dark" /></a>
+        </div>
+    </div>
+}

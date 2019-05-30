@@ -54,5 +54,84 @@ namespace Presentacion.Controllers
             }
             return RedirectToAction("ReaPago");
         }
+
+        public ActionResult VerificarDeudas(int idCu)
+        {
+
+            List<Cuota> cuotas = new List<Cuota>();
+            cuotas = (List<Cuota>)Session["cuotas"];
+            decimal PagoTotal = 0;
+            decimal mora = logPago.Instancia.VerificarMora(cuotas, idCu);
+            if(mora != 0)
+            {
+                PagoTotal = logPago.Instancia.calcularNuevoPago(mora, cuotas);
+                return RedirectToAction("FormPago", new { pago= PagoTotal, idCuo = idCu});
+            }
+            else
+            {
+                return RedirectToAction("FormPago", new { pago = PagoTotal, idCuo = idCu });
+            }
+        }
+
+        public ActionResult FormPago (decimal pago, int idCuo)
+        {
+            List<Cuota> cuotas = new List<Cuota>();
+            cuotas = (List<Cuota>)Session["cuotas"];
+            Cliente cli = (Cliente)Session["cli"];
+            Cuota cuota = new Cuota();
+            Pago pagob = new Pago();
+            Prestamo prestamo = new Prestamo();
+            decimal mora = logPago.Instancia.VerificarMora(cuotas, idCuo);
+            foreach (var item in cuotas)
+            {
+                if(item.idCuo == idCuo)
+                {
+                    cuota.amortizacion = item.amortizacion;
+                    cuota.cuota = item.cuota;
+                    cuota.estado = item.estado;
+                    cuota.fechaPa = item.fechaPa;
+                    cuota.idCuo = item.idCuo;
+                    cuota.interes = item.interes;
+                    cuota.periodo = item.periodo;
+                    cuota.prestamo = item.prestamo;
+                    cuota.saldo = item.saldo;
+                    break;
+                } 
+            }
+            prestamo = cuota.prestamo;
+            pagob.idCuot = cuota;
+            pagob.idPres = prestamo;
+            pagob.idClin = cli;
+            pagob.mora = mora;
+            pagob.total = pago;
+            pagob.fechaPago = DateTime.Now;
+            ViewBag.total = pagob.total;
+            ViewBag.mora = pagob.mora;
+            Session["pag"] = pagob;
+            return View();
+        }
+
+        public ActionResult PagarDeuda()
+        {
+            Pago pago = new Pago();
+            pago = (Pago)Session["pag"];
+            Boolean valido = false;
+            if(pago.mora != 0)
+            {
+                List<Cuota> cuotas = new List<Cuota>();
+                cuotas = (List<Cuota>)Session["cuotas"];
+                List<Pago> pagos = logPago.Instancia.GenerarPagos(pago, cuotas);
+                foreach (var item in pagos)
+                {
+                    valido = logPago.Instancia.GuardarPago(item);
+                }
+
+            }
+            else
+            {
+                valido = logPago.Instancia.GuardarPago(pago);
+            }
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

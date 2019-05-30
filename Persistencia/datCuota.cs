@@ -73,16 +73,23 @@ namespace Persistencia
                 SqlDataReader dr = cmd.ExecuteReader();
                 while (dr.Read())
                 {
-                    Cuota cuota = new Cuota();
-                    cuota.idCuo = Convert.ToInt32(dr["idCuo"]);
-                    cuota.interes = Convert.ToDecimal(dr["interes"]);
-                    cuota.amortizacion = Convert.ToDecimal(dr["amortizacion"]);
-                    cuota.cuota = Convert.ToDecimal(dr["cuota"]);
-                    cuota.estado = Convert.ToBoolean(dr["estado"]);
-                    cuota.fechaPa = Convert.ToDateTime(dr["fechaPa"]);
-                    cuota.periodo = Convert.ToInt32(dr["periodo"]);
-                    cuota.saldo = Convert.ToDecimal(dr["saldo"]);
-                    lista.Add(cuota);
+                    int ban = Convert.ToInt32(dr["periodo"]);
+                    if (ban != 0){
+                        Cuota cuota = new Cuota();
+                        Prestamo prestamo = new Prestamo();
+                        cuota.idCuo = Convert.ToInt32(dr["idCuo"]);
+                        prestamo.idPres = Convert.ToInt32(dr["idPrest"]);
+                        cuota.prestamo = prestamo;
+                        cuota.interes = Convert.ToDecimal(dr["interes"]);
+                        cuota.amortizacion = Convert.ToDecimal(dr["amortizacion"]);
+                        cuota.cuota = Convert.ToDecimal(dr["cuota"]);
+                        cuota.estado = Convert.ToBoolean(dr["estado"]);
+                        cuota.fechaPa = Convert.ToDateTime(dr["fechaPa"]);
+                        cuota.periodo = ban;
+                        cuota.saldo = Convert.ToDecimal(dr["saldo"]);
+                        lista.Add(cuota);
+                    }
+                    
                 }
             }
             catch (Exception ex)

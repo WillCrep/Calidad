@@ -23,21 +23,13 @@
             <table class="table">
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.periodo)
+                        Número de cuota
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.saldo)
+                        <p>Pago del mes</p>
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.amortizacion)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.interes)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.cuota)
-                    </th>
-                    <th>
+                        Fecha de pago
                     </th>
                 </tr>
 
@@ -48,30 +40,26 @@
                             @Html.DisplayFor(modelItem => item.periodo)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.saldo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.amortizacion)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.interes)
-                        </td>
-                        <td>
                             @Html.DisplayFor(modelItem => item.cuota)
                         </td>
                         <td>
-                            <a href="@Url.Action("Index","Home")"><input type="button" class="btn btn-dark" value="Pagar Cuota" /></a>
+                            @Html.ValueFor(modelItem => item.fechaPa, "{0:dd/MM/yyyy}")
+                        </td>
+                        <td>
+                            @if (DateTime.Now.Month == item.fechaPa.Month)
+                            {
+                                @if (item.estado.Equals(false))
+                                {
+                                    <a href="@Url.Action("VerificarDeudas","Pago", new {idCu=item.idCuo })"><input type="button" class="btn btn-dark" value="Pagar Cuota" /></a>
+                                }
+                            }
                         </td>
                     </tr>
                 }
 
             </table>
-            <input type="submit" class="btn btn-dark" value="Guardar préstamo" id="guardar" name="guardar" onclick="go()" />
         </div>
 
-    <div>
-        @Html.ActionLink("Back to List", "Index")
-    </div>
 
 }
 
