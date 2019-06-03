@@ -2,6 +2,22 @@
     swal("OK");
 })*/
 
+function go2() {
+    swal({
+        title: "Pagado",
+        text: "Pago realizado exitosamente.",
+        icon: "success",
+        button: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                //redirect
+                var url = '@Url.Action("PagarDeuda","Pago")';
+                window.location.href = "/Pago/PagarDeuda/";
+            }
+        });
+}
+
 function go() {
     swal({
         title: "Guardado",
@@ -17,6 +33,8 @@ function go() {
             }
         });
 }
+
+
 /*$("#bus").click(function (e) {
     swal({
         title: "Deseas ser redirigido",

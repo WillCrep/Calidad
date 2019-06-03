@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Entidad.Pago>
+
+@{
+    ViewBag.Title = "ReportePago";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ReportePago</h2>
+
+
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.idCuot.periodo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.mora)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.total)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idCuot.periodo)
+                </td>
+                <td>
+                    @Html.ValueFor(modelItem => item.fechaPago, "{0:dd/MM/yyyy}")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.mora)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.total)
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div>
+    <p>
+        <a href="@Url.Action("Index","Home")"><input type="button" class="btn btn-dark" value="Inicio"/></a>
+    </p>
+</div>

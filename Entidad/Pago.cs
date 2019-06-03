@@ -14,6 +14,7 @@ namespace Entidad
         public DateTime fechaPago { get; set; }
         public decimal mora { get; set; }
         [Required(ErrorMessage = "Este campo es Obligatorio")]
+        [Range(47.70, 30000, ErrorMessage = "EL monto minimo debe ser 47.70")]
         public decimal total { get; set; }
         public Cliente idClin { get; set; }
         public Prestamo idPres { get; set; }

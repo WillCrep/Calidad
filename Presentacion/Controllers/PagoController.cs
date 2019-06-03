@@ -115,12 +115,13 @@ namespace Presentacion.Controllers
         {
             Pago pago = new Pago();
             pago = (Pago)Session["pag"];
+            List<Pago> pagos = new List<Pago>();
             Boolean valido = false;
             if(pago.mora != 0)
             {
                 List<Cuota> cuotas = new List<Cuota>();
                 cuotas = (List<Cuota>)Session["cuotas"];
-                List<Pago> pagos = logPago.Instancia.GenerarPagos(pago, cuotas);
+                pagos = logPago.Instancia.GenerarPagos(pago, cuotas);
                 foreach (var item in pagos)
                 {
                     valido = logPago.Instancia.GuardarPago(item);
@@ -129,9 +130,18 @@ namespace Presentacion.Controllers
             }
             else
             {
+                pagos.Add(pago);
                 valido = logPago.Instancia.GuardarPago(pago);
             }
-            return RedirectToAction("Index", "Home");
+            Session["pagos"] = pagos;
+            return RedirectToAction("ReportePago");
+        }
+
+        public ActionResult ReportePago()
+        {
+            List<Pago> pagos = new List<Pago>();
+            pagos = (List<Pago>)Session["pagos"];
+            return View(pagos);
         }
     }
 }
