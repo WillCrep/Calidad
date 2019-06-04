@@ -69,6 +69,7 @@ namespace Presentacion.Controllers
             }
             else
             {
+                PagoTotal = logPago.Instancia.calcularNuevoPago(mora, cuotas);
                 return RedirectToAction("FormPago", new { pago = PagoTotal, idCuo = idCu });
             }
         }
