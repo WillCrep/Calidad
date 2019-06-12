@@ -52,11 +52,11 @@ namespace Presentacion.Controllers
                 {
                     ViewBag.exito = 1;
                     val = logPrestamo.Instancia.ValPrestamo(cli.idCli);
-                    ViewBag.valido = val;
+                    ViewBag.valido = val ? 1 : 2;
                 }
                 else
                 {
-                    ViewBag.exito = 0;
+                    ViewBag.exito = 2;
                 }
                 ViewBag.cliente = cli;
                 Session["cli"] = cli;
@@ -68,6 +68,7 @@ namespace Presentacion.Controllers
             }
             return View("ReaPres");
         }
+
 
         public ActionResult Cronograma(Prestamo prestamo)
         {

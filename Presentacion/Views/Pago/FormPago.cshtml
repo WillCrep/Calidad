@@ -8,34 +8,33 @@
 
 @if (ViewBag.mora != 0)
 {
-
         <div>
             <p>El monto a pagar es de : @ViewBag.total</p>
             <p>Con un aumento de @ViewBag.mora . Por tener deudas pendientes.</p>
             <div class="form-group">
+                <input type="hidden" value="@ViewBag.total" id="to" name="to" />
                 <label for="tEfectivo">Efectivo: </label>
-                <input type="text" class="form-control" id="tEfectivo" name="tEfectivo" onchange="val1()"/>
-                <label id="errorEfe" class="custom-control-label text-danger" style="display:none;">El monto minimo de pago es 47.07</label>
+                <input type="text" class="form-control" id="tEfectivo" name="tEfectivo" onchange="val1()" />
+                <label id="errorEfe" class="custom-control-label text-danger" style="display:none;">El monto minimo de pago es @ViewBag.total</label>
             </div>
             <div class="form-group">
                 <label for="tVuelto">Vuelto: </label>
                 <input type="text" class="form-control" id="tVuelto" name="tVuelto" />
             </div>
             <div class="form-group">
-                <input type="submit" value="Pagar deuda"  id="pDeu" class="btn btn-dark" onclick="go2()" />
+                <input type="submit" value="Pagar deuda" id="pDeu" class="btn btn-dark" onclick="go2()" />
             </div>
         </div>
-    
 }
 else
 {
-
     <div>
         <p>El monto a pagar es de : @ViewBag.total</p>
         <div class="form-group">
+            <input type="hidden" value="@ViewBag.total" id="to" name="to" />
             <label for="tEfectivo">Efectivo: </label>
             <input type="text" class="form-control" id="tEfectivo" onchange="val1()" />
-            <label id="errorEfe" class="custom-control-label text-danger" style="display:none;">El monto minimo de pago es 47.07</label>
+            <label id="errorEfe" class="custom-control-label text-danger" style="display:none;">El monto minimo de pago es @ViewBag.total</label>
         </div>
         <div class="form-group">
             <label for="tVuelto">Vuelto: </label>
@@ -45,28 +44,4 @@ else
             <input type="submit" value="Pagar deuda" id="pDeu" class="btn btn-dark" onclick="go2()" />
         </div>
     </div>
-
 }
-    
-
-<script>
-    function val1() {
-    var myJs = '@ViewBag.total';
-    var tefec = $('#tEfectivo').val();
-    var minimo = 47.07;
-    if (tefec >= minimo) {
-        if (tefec > myJs) {
-            $('#pDeu').attr("disabled", false);
-            document.getElementById('errorEfe').style.display = 'none';
-            var vuel = Math.round((tefec - myJs) * 100) / 100;
-            $('#tVuelto').val(vuel);
-        }
-        else {
-            $('#tVuelto').val('0');
-        }
-    } else {
-        $('#pDeu').attr("disabled", true);
-        document.getElementById('errorEfe').style.display = 'block';
-    }
-};
-</script>

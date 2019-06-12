@@ -1,8 +1,11 @@
-﻿/*$("#guardar").click(function (e) {
+﻿import Swal from "./sweetalert2";
+
+/*$("#guardar").click(function (e) {
     swal("OK");
 })*/
 
 function go2() {
+   
     swal({
         title: "Pagado",
         text: "Pago realizado exitosamente.",
@@ -12,8 +15,9 @@ function go2() {
         .then((willDelete) => {
             if (willDelete) {
                 //redirect
-                var url = '@Url.Action("PagarDeuda","Pago")';
-                window.location.href = "/Pago/PagarDeuda/";
+                var efectivo = $('#tEfectivo').val();
+                var vuelto = $('#tVuelto').val();
+                window.location.href = "/Pago/PagarDeuda/?efec="+  encodeURIComponent(efectivo) + "&vuelt="+ encodeURIComponent(vuelto);
             }
         });
 }
@@ -34,6 +38,20 @@ function go() {
         });
 }
 
+function val1() {
+    var myJs = $('#to').val();
+    var tefec = $('#tEfectivo').val();
+    if (tefec >= myJs) {
+        $('#pDeu').attr("disabled", false);
+        document.getElementById('errorEfe').style.display = 'none';
+        var vuel = Math.round((tefec - myJs) * 100) / 100;
+        $('#tVuelto').val(vuel);
+
+    } else {
+        $('#pDeu').attr("disabled", true);
+        document.getElementById('errorEfe').style.display = 'block';
+    }
+};
 
 /*$("#bus").click(function (e) {
     swal({

@@ -13,7 +13,7 @@ namespace Presentacion.Controllers
         // GET: Pago
         public ActionResult ReaPago()
         {
-            if (Session["cli"] !=null)
+            if (Session["cli"] != null)
             {
                 ViewBag.exito = 1;
                 List<Cuota> cuotas = new List<Cuota>();
@@ -31,8 +31,8 @@ namespace Presentacion.Controllers
             try
             {
                 List<Cuota> cuotas = new List<Cuota>();
-                String dni = frm["dni"].ToString();
                 Cliente cli = new Cliente();
+                String dni = frm["dni"].ToString();
                 cli = logCliente.Instancia.BusClienteDni(dni);
                 if (cli != null)
                 {
@@ -66,7 +66,7 @@ namespace Presentacion.Controllers
             {
                 PagoTotal = logPago.Instancia.calcularNuevoPago(mora, cuotas);
                 return RedirectToAction("FormPago", new { pago= PagoTotal, idCuo = idCu});
-            }
+            } 
             else
             {
                 PagoTotal = logPago.Instancia.calcularNuevoPago(mora, cuotas);
@@ -112,7 +112,8 @@ namespace Presentacion.Controllers
             return View();
         }
 
-        public ActionResult PagarDeuda()
+
+        public ActionResult PagarDeuda(String efec, String vuelt)
         {
             Pago pago = new Pago();
             pago = (Pago)Session["pag"];

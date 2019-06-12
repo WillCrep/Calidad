@@ -47,12 +47,16 @@
                         <td>
                             @if (DateTime.Now.Month == item.fechaPa.Month)
                             {
-                                if(DateTime.Now.Year == item.fechaPa.Year)
+                                if (DateTime.Now.Year == item.fechaPa.Year)
                                 {
-                                    if (item.estado.Equals(false))
-                                    {
-                                        <a href="@Url.Action("VerificarDeudas","Pago", new {idCu=item.idCuo })"><input type="button" class="btn btn-dark" value="Pagar Cuota" /></a>
-                                    }
+                                    //if (DateTime.Now.Day == item.fechaPa.Day)
+                                    //{
+                                        if (item.estado.Equals(false))
+                                        {
+                                            <a href="@Url.Action("VerificarDeudas","Pago", new {idCu=item.idCuo })"><input type="button" class="btn btn-dark" value="Pagar Cuota" /></a>
+                                        }
+                                    //}
+
                                 }
 
                             }

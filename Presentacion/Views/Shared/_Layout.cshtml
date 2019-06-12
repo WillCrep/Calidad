@@ -13,7 +13,6 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
@@ -34,5 +33,25 @@
         </footer>
     </div>
     @Scripts.Render("~/bundles/js")
+    <script>
+        $(function () {
+            var ina = $('#viebagExi').val();
+            var ino = $('#viebagVal').val();
+    if (ina == 2) {
+        swal({
+            title: "Error!!",
+            text: "El cliente no existe",
+            icon: "error",
+        });
+            }
+    if (ino == 2) {
+        swal({
+            title: "Error!!",
+            text: "El cliente no tiene permitido realizar prestamo",
+            icon: "error",
+        });
+            }
+        });
+    </script>
 </body>
 </html>

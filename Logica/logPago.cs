@@ -20,13 +20,14 @@ namespace Logica
 
         #endregion Singleton
 
-        #region AplicarMora
+        #region VerificarMora
         public decimal VerificarMora(List<Cuota> cuotas, int idCu)
         {
             decimal deu = 0;
             decimal cont = 0;
             decimal mora = 0;
-
+            List<int> dias = new List<int>();
+            List<decimal> moras = new List<decimal>();
             foreach (var item in cuotas)
             {
                 if (item.estado == false)
@@ -37,6 +38,8 @@ namespace Logica
                     }
                     else
                     {
+                        TimeSpan d = DateTime.Now.Date - item.fechaPa.Date;
+                        dias.Add(d.Days);
                         deu = item.cuota;
                         cont = cont + 1;
                     }
@@ -45,11 +48,36 @@ namespace Logica
 
             if (cont > 0)
             {
-               mora = (deu * cont) * (decimal)0.25 ;
+                moras = GenerarMora(dias,deu);
             }
             return mora;
         }
-        #endregion AplicarMora
+        #endregion VerificarMora
+        public decimal calcularIm()
+        {
+            decimal im = 0;
+            return im;
+        }
+        public decimal calcularIcv()
+        {
+            decimal icm = 0;
+            return icm;
+        }
+        #region GenerarMora
+        public List<decimal> GenerarMora(List<int> dias, decimal deu)
+        {
+            List<decimal> mora =new List<decimal>();
+            decimal tm = (decimal)1.991;
+            decimal tea = (decimal)0.4;
+            foreach (var item in dias)
+            {
+                decimal ad = 0;
+                ad = ((decimal)Math.Pow(1+(double)tm,(double)item/360)-1)*deu;
+                mora.Add(ad);
+            }
+            return mora;
+        }
+        #endregion GenerarMora
 
         #region calcularNuevoPago
         public decimal calcularNuevoPago(decimal mora, List<Cuota> cuotas)
@@ -59,7 +87,7 @@ namespace Logica
             foreach (var item in cuotas)
             {
                 deu = item.cuota;
-                break;
+                break; 
             }
             if(mora != 0)
             {
@@ -70,7 +98,6 @@ namespace Logica
             {
                 return deu;
             }
-            
         }
         #endregion calcularNuevoPago
 
