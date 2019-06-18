@@ -66,8 +66,8 @@ else
 </script>
 <script>
     function val1() {
-    var myJs = $('#to').val();
-    var tefec = $('#tEfectivo').val();
+        let myJs = parseFloat($('#to').val());
+        let tefec = parseFloat($('#tEfectivo').val());
     if (tefec >= myJs) {
         $('#pDeu').attr("disabled", false);
         document.getElementById('errorEfe').style.display = 'none';

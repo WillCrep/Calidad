@@ -37,7 +37,7 @@ namespace Entidad
         public decimal calcularTasaEfectivaMensual(Prestamo prestamo)
         {
             decimal i = (decimal)Math.Pow((1 + (double)prestamo.tea), 0.083f) - 1;
-            return Math.Round(i, 2, MidpointRounding.AwayFromZero);
+            return i;
         }
         #endregion calculoTasaEfectivaMensual
 
@@ -46,7 +46,7 @@ namespace Entidad
         {
             decimal i = calcularTasaEfectivaMensual(prestamo);
             decimal a = prestamo.monto / ((1 - (decimal)Math.Pow(1 + (double)i, -prestamo.cantCu)) / i);
-            return Math.Round(a, 2, MidpointRounding.AwayFromZero);
+            return a;
         }
         #endregion calculoCuotaFijaMensual
 
@@ -85,7 +85,7 @@ namespace Entidad
                 if (w == 0)
                 {
                     cuota.periodo = w;
-                    cuota.saldo = Math.Round(s, 2, MidpointRounding.AwayFromZero);
+                    cuota.saldo = s;
                     cuota.cuota = 0;
                     cuota.interes = 0;
                     cuota.amortizacion = 0;
@@ -100,11 +100,11 @@ namespace Entidad
                     cuotaT.amortizacion = cuotas[w - 1].amortizacion;
                     cuotaT.fechaPa = cuotas[w - 1].fechaPa;
 
-                    cuota.cuota = Math.Round(a, 3, MidpointRounding.AwayFromZero);
+                    cuota.cuota = a;
                     cuota.periodo = w;
-                    cuota.interes = Math.Round(calcularInteres(i, cuotaT.saldo), 2, MidpointRounding.AwayFromZero);
-                    cuota.amortizacion = Math.Round(calcularAmortizacion(a, cuota.interes), 2, MidpointRounding.AwayFromZero);
-                    cuota.saldo = Math.Round(calcularSaldo(cuota.amortizacion, cuotaT.saldo), 2, MidpointRounding.AwayFromZero);
+                    cuota.interes = calcularInteres(i, cuotaT.saldo);
+                    cuota.amortizacion = calcularAmortizacion(a, cuota.interes);
+                    cuota.saldo = calcularSaldo(cuota.amortizacion, cuotaT.saldo);
                     cuota.fechaPa = cuotaT.fechaPa.AddMonths(1);
                     cuotas.Add(cuota);
                 }
