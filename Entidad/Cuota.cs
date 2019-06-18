@@ -32,8 +32,8 @@ namespace Entidad
         public decimal calculoDeIm(Cuota c)
         {
             decimal im = 0;
-            int dias = c.conteoDeDias(c);
-            im = (((decimal)Math.Pow(2.991, dias / 360)) - 1) * c.cuota;
+            double dias = c.conteoDeDias(c);
+            im = ((decimal)Math.Pow(2.991, dias / 360) - 1) * c.cuota;
             return im;
         }
         #endregion calculoDeIm
@@ -42,18 +42,18 @@ namespace Entidad
         public decimal calculoIcv (Cuota c)
         {
             decimal icv = 0;
-            int dias = c.conteoDeDias(c);
-            icv = (((decimal)Math.Pow(1.4, dias / 360)) - 1) * c.cuota;
+            double dias = c.conteoDeDias(c);
+            icv = ((decimal)Math.Pow(1.4, (dias / 360)) - 1) * c.cuota;
             return icv;
         }
         #endregion calculoDeIcv
 
         #region conteoDeDias
-        public int conteoDeDias (Cuota cuota)
+        public Double conteoDeDias (Cuota cuota)
         {
-            int dias = 0;
+            double dias = 0;
             TimeSpan d = DateTime.Now.Date - cuota.fechaPa.Date;
-            dias = Convert.ToInt32(d);
+            dias = d.Days;
             return dias;
         }
         #endregion conteoDeDias

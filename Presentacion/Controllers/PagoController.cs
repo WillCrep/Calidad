@@ -94,7 +94,7 @@ namespace Presentacion.Controllers
             {
                 List<int> cuos = (List<int>)TempData["cuos"];
                 int c = Convert.ToInt32(TempData["pa"]);
-                for (int i =0; i <= c; i++)
+                for (int i =0; i < c; i++)
                 {
                     Pago p = new Pago();
                     p = p.GenerarPagoMora(cuos[i], cuotas);
@@ -111,13 +111,13 @@ namespace Presentacion.Controllers
         public ActionResult PagarDeuda(String efec, String vuelt)
         {
             List<Pago> pagos = (List<Pago>)TempData["pag"];
+            Pago p = new Pago();
             try
             {
                 if (pagos.Count > 1)
                 {
                     foreach (var item in pagos)
                     {
-                        Pago p = new Pago();
                         p = item;
                         p.detPago.efectivo = Convert.ToDecimal(efec);
                         p.detPago.vuelto = Convert.ToDecimal(vuelt);
@@ -126,7 +126,7 @@ namespace Presentacion.Controllers
                 }
                 else
                 {
-                    Pago p = pagos[0];
+                    p = pagos[0];
                     p.detPago.efectivo = Convert.ToDecimal(efec);
                     p.detPago.vuelto = Convert.ToDecimal(vuelt);
                     Boolean val = logPago.Instancia.GuardarPago(p);

@@ -28,6 +28,8 @@ namespace Entidad
             p.idCuot = c;
             p.idPres = c.prestamo;
             p.idClin = c.prestamo.cliente;
+            DetPago d = new DetPago();
+            p.detPago = d;
             return p;
         }
 
@@ -48,6 +50,7 @@ namespace Entidad
                     p.detPago = d;
                     p.mora = d.iM + d.iCv;
                     p.total = item.cuota + p.mora;
+                    break;
                 }
             }
             return p;
