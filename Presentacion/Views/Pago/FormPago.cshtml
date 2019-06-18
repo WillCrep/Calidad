@@ -45,3 +45,38 @@ else
         </div>
     </div>
 }
+<script>
+    function go2() {
+   
+    swal({
+        title: "Pagado",
+        text: "Pago realizado exitosamente.",
+        icon: "success",
+        button: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                //redirect
+                var efectivo = $('#tEfectivo').val();
+                var vuelto = $('#tVuelto').val();
+                window.location.href = "/Pago/PagarDeuda/?efec="+  encodeURIComponent(efectivo) + "&vuelt="+ encodeURIComponent(vuelto);
+            }
+        });
+};
+</script>
+<script>
+    function val1() {
+    var myJs = $('#to').val();
+    var tefec = $('#tEfectivo').val();
+    if (tefec >= myJs) {
+        $('#pDeu').attr("disabled", false);
+        document.getElementById('errorEfe').style.display = 'none';
+        var vuel = Math.round((tefec - myJs) * 100) / 100;
+        $('#tVuelto').val(vuel);
+
+    } else {
+        $('#pDeu').attr("disabled", true);
+        document.getElementById('errorEfe').style.display = 'block';
+    }
+};
+</script>

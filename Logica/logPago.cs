@@ -20,39 +20,7 @@ namespace Logica
 
         #endregion Singleton
 
-        #region VerificarMora
-        public decimal VerificarMora(List<Cuota> cuotas, int idCu)
-        {
-            decimal deu = 0;
-            decimal cont = 0;
-            decimal mora = 0;
-            List<int> dias = new List<int>();
-            List<decimal> moras = new List<decimal>();
-            foreach (var item in cuotas)
-            {
-                if (item.estado == false)
-                {
-                    if (item.idCuo == idCu)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        TimeSpan d = DateTime.Now.Date - item.fechaPa.Date;
-                        dias.Add(d.Days);
-                        deu = item.cuota;
-                        cont = cont + 1;
-                    }
-                }
-            }
-
-            if (cont > 0)
-            {
-                moras = GenerarMora(dias,deu);
-            }
-            return mora;
-        }
-        #endregion VerificarMora
+        
         public decimal calcularIm()
         {
             decimal im = 0;
@@ -63,21 +31,30 @@ namespace Logica
             decimal icm = 0;
             return icm;
         }
-        #region GenerarMora
-        public List<decimal> GenerarMora(List<int> dias, decimal deu)
+
+        #region totalPagoVariasCuotas
+        public decimal totalPagoVariasCuotas(List<Pago> pagos)
         {
-            List<decimal> mora =new List<decimal>();
-            decimal tm = (decimal)1.991;
-            decimal tea = (decimal)0.4;
-            foreach (var item in dias)
+            decimal total = 0;
+            foreach (var item in pagos)
             {
-                decimal ad = 0;
-                ad = ((decimal)Math.Pow(1+(double)tm,(double)item/360)-1)*deu;
-                mora.Add(ad);
+                total = total + item.total;
+            }
+            return total;
+        }
+        #endregion totalPagoVariasCuotas
+
+        #region totalPagoMora
+        public decimal totalPagoMora(List<Pago> pagos)
+        {
+            decimal mora = 0;
+            foreach (var item in pagos)
+            {
+                mora = mora + item.mora;
             }
             return mora;
         }
-        #endregion GenerarMora
+        #endregion totalPagoMora
 
         #region calcularNuevoPago
         public decimal calcularNuevoPago(decimal mora, List<Cuota> cuotas)

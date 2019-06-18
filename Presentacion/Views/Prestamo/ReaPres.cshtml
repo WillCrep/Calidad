@@ -8,9 +8,9 @@
 <form action="BuscarCli" method="post">
     <div>
         <label for="dni">Ingrese DNI del Cliente</label>
-        <input type="text" placeholder="12459764" id="dni" name="dni" class="form-control col-md-2" />
         <div>
-            <input type="submit" id="bus" name="bus" value="Buscar Cliente" class="btn btn-default" onclick="ven()"/>
+            <input class="form-control" type="search" name="dni" placeholder="dni cliente" aria-label="Search"/>
+            <button class="btn btn-outline-primary" id="busCli" type="submit">Buscar Cliente</button>
         </div>
     </div>
 </form>

@@ -50,3 +50,21 @@
         </table>
         <input type="submit" class="btn btn-block" value="Guardar préstamo" id="guardar" name="guardar" onclick="go()" />
     </div>
+
+<script>
+    function go() {
+    swal({
+        title: "Guardado",
+        text: "Se guardó el préstamo del cliente y el cronograma de pagos",
+        icon: "success",
+        button: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                //redirect
+                var url = '@Url.Action("GuardarCronograma","Prestamo")';
+                window.location.href = "/Prestamo/GuardarCronograma/";
+            }
+        });
+};
+</script>

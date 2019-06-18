@@ -19,6 +19,69 @@ namespace Logica
 
         #endregion Singleton
 
+        #region VerificarCuota
+        public List<int> VerificarCuota(List<Cuota> cuotas)
+        {
+            List<int> cuo = new List<int>();
+            foreach (var item in cuotas)
+            {
+                if (!item.estado)
+                {
+                    cuo.Add(item.idCuo);
+                    if (item.p == 1)
+                    {
+                        break;
+                    }
+                }
+            }
+            return cuo;
+        }
+        #endregion VerificarCuota
+
+
+        #region cuotaUnitaria
+        public Cuota cuotaUnitaria(List<Cuota> cuotas)
+        {
+            Cuota c = new Cuota();
+            foreach (var item in cuotas)
+            {
+                if (item.p == 1)
+                {
+                    c = item;
+                    break;
+                }
+            }
+            return c;
+        }
+        #endregion cuotaUnitaria
+
+        #region cuotasApagar
+        public List<Cuota> cuotasApagar(List<Cuota> cuota)
+        {
+            List<Cuota> cuotas = new List<Cuota>();
+            int id = 0;
+            foreach (var item in cuota)
+            {
+                if (item.estado == false)
+                {
+                    id = item.prestamo.idPres;
+                    if (DateTime.Now.Date == item.fechaPa.Date)
+                    {
+                        item.p = 1;
+                    }
+                }
+            }
+            foreach (var item in cuota)
+            {
+                if (item.prestamo.idPres == id)
+                {
+                    cuotas.Add(item);
+                }
+            }
+            return cuotas;
+        }
+        #endregion cuotasApagar
+
         #region Listar Cuotas
         public List<Cuota> LsCuotas(string dni)
         {
@@ -34,81 +97,16 @@ namespace Logica
         }
         #endregion Listar Cuotas
 
-        #region Calculos de Cuotas
-        private decimal calcularTasaEfectivaMensual(Prestamo prestamo)
-        {
-            decimal i = (decimal)Math.Pow((1 + (double)prestamo.tea), 0.083f) - 1;
-            return Math.Round(i, 2, MidpointRounding.AwayFromZero);
-        }
-
-        private decimal calcularCuotaFijaMensual(Prestamo prestamo)
-        {
-            decimal i = calcularTasaEfectivaMensual(prestamo);
-            decimal a = prestamo.monto / ((1 - (decimal)Math.Pow(1 + (double)i, -prestamo.cantCu)) / i);
-            return Math.Round(a, 2, MidpointRounding.AwayFromZero);
-        }
-
-        private decimal calcularSaldo(decimal amortizacion, decimal s)
-        {
-            return s - amortizacion;
-        }
-
-        private decimal calcularInteres(decimal i, decimal saldo)
-        {
-            return saldo * i;
-        }
-
-        private decimal calcularAmortizacion(decimal a, decimal interes)
-        {
-            return a - interes;
-        }
-
-        public List<Cuota> GenerarCuotas(Prestamo prestamo)
-        {
-            decimal a = calcularCuotaFijaMensual(prestamo);
-            decimal i = calcularTasaEfectivaMensual(prestamo);
-            decimal s = prestamo.monto;
-            List<Cuota> cuotas = new List<Cuota>();
-            for (int w = 0; w < prestamo.cantCu + 1; w++)
-            {
-                Cuota cuota = new Cuota();
-                Cuota cuotaT = new Cuota();
-                if (w == 0)
-                {
-                    cuota.periodo = w;
-                    cuota.saldo = Math.Round(s, 2, MidpointRounding.AwayFromZero);
-                    cuota.cuota = 0;
-                    cuota.interes = 0;
-                    cuota.amortizacion = 0;
-                    cuota.fechaPa = DateTime.Now;
-                    cuotas.Add(cuota);
-                }
-                else
-                {
-
-                    cuotaT.saldo = cuotas[w - 1].saldo;
-                    cuotaT.interes = cuotas[w - 1].interes;
-                    cuotaT.amortizacion = cuotas[w - 1].amortizacion;
-                    cuotaT.fechaPa = cuotas[w - 1].fechaPa;
-
-                    cuota.cuota = Math.Round(a, 3, MidpointRounding.AwayFromZero);
-                    cuota.periodo = w;
-                    cuota.interes = Math.Round(calcularInteres(i, cuotaT.saldo), 2, MidpointRounding.AwayFromZero);
-                    cuota.amortizacion = Math.Round(calcularAmortizacion(a, cuota.interes), 2, MidpointRounding.AwayFromZero);
-                    cuota.saldo = Math.Round(calcularSaldo(cuota.amortizacion, cuotaT.saldo), 2, MidpointRounding.AwayFromZero);
-                    cuota.fechaPa = cuotaT.fechaPa.AddMonths(1);
-                    cuotas.Add(cuota);
-                }
-            }
-            return cuotas;
-        }
-        #endregion Calculos de Cuotas
-
         #region Registrar Cuotas
-        public Boolean RegistrarCuotas(List<Cuota> cuotas)
+        public Boolean RegistrarCuotas(List<Cuota> cuotas, Prestamo prestamo, int id)
         {
             try
             {
+                prestamo.idPres = id;
+                foreach (var item in cuotas)
+                {
+                    item.prestamo = prestamo;
+                }
                 return datCuota.Instancia.RegistrarCuotas(cuotas);
             }
             catch (Exception e)

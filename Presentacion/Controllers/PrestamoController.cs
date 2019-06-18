@@ -13,7 +13,6 @@ namespace Presentacion.Controllers
         // GET: Prestamo
         public ActionResult ReaPres()
         {
-
             return View();
         }
 
@@ -24,8 +23,6 @@ namespace Presentacion.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    prestamo.fechaIni = DateTime.Now;
-                    prestamo.fechaTerm = DateTime.Now.AddMonths(prestamo.cantCu);
                     return RedirectToAction("Cronograma", "Prestamo", prestamo);
                 }
                 else
@@ -39,31 +36,22 @@ namespace Presentacion.Controllers
                 throw ex;
             }
         }
-
         public ActionResult BuscarCli(FormCollection frm)
         {
             try
             {
-                Boolean val = false;
-                String dni = frm["dni"].ToString();
-                Cliente cli = new Cliente();
-                cli = logCliente.Instancia.BusClienteDni(dni);
-                if (cli != null)
+                ViewBag.cliente = logCliente.Instancia.BusClienteDni(frm["dni"].ToString());
+                if (ViewBag.cliente != null)
                 {
                     ViewBag.exito = 1;
-                    val = logPrestamo.Instancia.ValPrestamo(cli.idCli);
-                    ViewBag.valido = val ? 1 : 2;
+                    ViewBag.valido = logPrestamo.Instancia.ValPrestamo(ViewBag.cliente);
+                    Session["cli"] = ViewBag.cliente;
+                    return View("ReaPres");
                 }
-                else
-                {
-                    ViewBag.exito = 2;
-                }
-                ViewBag.cliente = cli;
-                Session["cli"] = cli;
+                ViewBag.exito = 2;
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
             return View("ReaPres");
@@ -72,7 +60,7 @@ namespace Presentacion.Controllers
 
         public ActionResult Cronograma(Prestamo prestamo)
         {
-            List<Cuota> Cuotas = logCuota.Instancia.GenerarCuotas(prestamo);
+            List<Cuota> Cuotas = prestamo.GenerarCuotas(prestamo);
             Session["cu"] = Cuotas;
             Session["pre"] = prestamo;
             return View(Cuotas);
@@ -80,18 +68,21 @@ namespace Presentacion.Controllers
 
         public ActionResult GuardarCronograma()
         {
-            Prestamo prestamo = (Prestamo)Session["pre"];
-            Cliente cli = (Cliente)Session["cli"];
-            prestamo.cliente = cli;
-            int idPrestamo = logPrestamo.Instancia.RegistrarPrestamo(prestamo);
-            prestamo.idPres = idPrestamo;
-            List<Cuota> cuotas = new List<Cuota>();
-            cuotas = (List<Cuota>)Session["cu"];
-            foreach (var item in cuotas)
+            try
             {
-                item.prestamo = prestamo;
+                Prestamo prestamo = (Prestamo)Session["pre"];
+                Cliente cli = (Cliente)Session["cli"];
+                prestamo.cliente = cli;
+                List<Cuota> cuotas = new List<Cuota>();
+                cuotas = (List<Cuota>)Session["cu"];
+                int idPrestamo = logPrestamo.Instancia.RegistrarPrestamo(prestamo);
+                Boolean valido = logCuota.Instancia.RegistrarCuotas(cuotas, prestamo, idPrestamo);
             }
-            Boolean valido = logCuota.Instancia.RegistrarCuotas(cuotas);
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
             return RedirectToAction("ReaPres", "Prestamo");
         }
     }

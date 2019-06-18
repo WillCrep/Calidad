@@ -13,11 +13,20 @@ namespace Presentacion.Controllers
         // GET: Pago
         public ActionResult ReaPago()
         {
-            if (Session["cli"] != null)
+            if (TempData["dni"]!=null)
             {
-                ViewBag.exito = 1;
                 List<Cuota> cuotas = new List<Cuota>();
-                cuotas = (List<Cuota>)Session["cuotas"];
+                cuotas = logCuota.Instancia.LsCuotas(TempData["dni"].ToString());
+                cuotas = logCuota.Instancia.cuotasApagar(cuotas);
+                ViewBag.exito = 1;
+                if (cuotas != null)
+                {
+                    TempData["cuotas"] = cuotas;
+                }
+                else
+                {
+                    ViewBag.v = 1;
+                }
                 return View(cuotas);
             }
             else
@@ -30,22 +39,18 @@ namespace Presentacion.Controllers
         {
             try
             {
-                List<Cuota> cuotas = new List<Cuota>();
                 Cliente cli = new Cliente();
                 String dni = frm["dni"].ToString();
                 cli = logCliente.Instancia.BusClienteDni(dni);
                 if (cli != null)
                 {
-                    
-                    cuotas = logCuota.Instancia.LsCuotas(dni);
-                    Session["cuotas"] = cuotas;
+                    TempData["dni"] = dni;
                 }
                 else
                 {
-                    ViewBag.exito = 0;
+                    ViewBag.exito = 2;
+                    return View("Reapago");
                 }
-                ViewBag.cliente = cli;
-                Session["cli"] = cli;
             }
             catch (Exception ex)
             {
@@ -57,92 +62,89 @@ namespace Presentacion.Controllers
 
         public ActionResult VerificarDeudas(int idCu)
         {
-
-            List<Cuota> cuotas = new List<Cuota>();
-            cuotas = (List<Cuota>)Session["cuotas"];
-            decimal PagoTotal = 0;
-            decimal mora = logPago.Instancia.VerificarMora(cuotas, idCu);
-            if(mora != 0)
+            List<Cuota> cuotas = (List<Cuota>)TempData["cuotas"];
+            TempData["cuotas"] = cuotas;
+            List<int> cuo = logCuota.Instancia.VerificarCuota(cuotas);
+            if(cuo.Count > 1)
             {
-                PagoTotal = logPago.Instancia.calcularNuevoPago(mora, cuotas);
-                return RedirectToAction("FormPago", new { pago= PagoTotal, idCuo = idCu});
+
+                TempData["pa"] = cuo.Count;
+                TempData["cuos"] = cuo;
             } 
             else
             {
-                PagoTotal = logPago.Instancia.calcularNuevoPago(mora, cuotas);
-                return RedirectToAction("FormPago", new { pago = PagoTotal, idCuo = idCu });
+                TempData["pa"] = 0;
             }
+            return RedirectToAction("FormPago");
         }
 
-        public ActionResult FormPago (decimal pago, int idCuo)
+        public ActionResult FormPago ()
         {
-            List<Cuota> cuotas = new List<Cuota>();
-            cuotas = (List<Cuota>)Session["cuotas"];
-            Cliente cli = (Cliente)Session["cli"];
-            Cuota cuota = new Cuota();
-            Pago pagob = new Pago();
-            Prestamo prestamo = new Prestamo();
-            decimal mora = logPago.Instancia.VerificarMora(cuotas, idCuo);
-            foreach (var item in cuotas)
+            List<Cuota> cuotas = (List<Cuota>)TempData["cuotas"];
+            List<Pago> pagos = new List<Pago>();
+            if (Convert.ToInt32(TempData["pa"]) == 0)
             {
-                if(item.idCuo == idCuo)
-                {
-                    cuota.amortizacion = item.amortizacion;
-                    cuota.cuota = item.cuota;
-                    cuota.estado = item.estado;
-                    cuota.fechaPa = item.fechaPa;
-                    cuota.idCuo = item.idCuo;
-                    cuota.interes = item.interes;
-                    cuota.periodo = item.periodo;
-                    cuota.prestamo = item.prestamo;
-                    cuota.saldo = item.saldo;
-                    break;
-                } 
+                Cuota c = logCuota.Instancia.cuotaUnitaria(cuotas);
+                Pago p = new Pago();
+                p = p.GenerarPago(c);
+                pagos.Add(p);
+                ViewBag.total = c.cuota;
             }
-            prestamo = cuota.prestamo;
-            pagob.idCuot = cuota;
-            pagob.idPres = prestamo;
-            pagob.idClin = cli;
-            pagob.mora = mora;
-            pagob.total = pago;
-            pagob.fechaPago = DateTime.Now;
-            ViewBag.total = pagob.total;
-            ViewBag.mora = pagob.mora;
-            Session["pag"] = pagob;
+            else
+            {
+                List<int> cuos = (List<int>)TempData["cuos"];
+                int c = Convert.ToInt32(TempData["pa"]);
+                for (int i =0; i <= c; i++)
+                {
+                    Pago p = new Pago();
+                    p = p.GenerarPagoMora(cuos[i], cuotas);
+                    pagos.Add(p);
+                }
+                ViewBag.total = logPago.Instancia.totalPagoVariasCuotas(pagos);
+                ViewBag.mora = logPago.Instancia.totalPagoMora(pagos);
+            }
+            TempData["pag"] = pagos;
             return View();
         }
 
 
         public ActionResult PagarDeuda(String efec, String vuelt)
         {
-            Pago pago = new Pago();
-            pago = (Pago)Session["pag"];
-            List<Pago> pagos = new List<Pago>();
-            Boolean valido = false;
-            if(pago.mora != 0)
+            List<Pago> pagos = (List<Pago>)TempData["pag"];
+            try
             {
-                List<Cuota> cuotas = new List<Cuota>();
-                cuotas = (List<Cuota>)Session["cuotas"];
-                pagos = logPago.Instancia.GenerarPagos(pago, cuotas);
-                foreach (var item in pagos)
+                if (pagos.Count > 1)
                 {
-                    valido = logPago.Instancia.GuardarPago(item);
+                    foreach (var item in pagos)
+                    {
+                        Pago p = new Pago();
+                        p = item;
+                        p.detPago.efectivo = Convert.ToDecimal(efec);
+                        p.detPago.vuelto = Convert.ToDecimal(vuelt);
+                        Boolean val = logPago.Instancia.GuardarPago(p);
+                    }
                 }
-
+                else
+                {
+                    Pago p = pagos[0];
+                    p.detPago.efectivo = Convert.ToDecimal(efec);
+                    p.detPago.vuelto = Convert.ToDecimal(vuelt);
+                    Boolean val = logPago.Instancia.GuardarPago(p);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                pagos.Add(pago);
-                valido = logPago.Instancia.GuardarPago(pago);
+
+                throw ex;
             }
-            Session["pagos"] = pagos;
+            TempData["pag"] = pagos;
             return RedirectToAction("ReportePago");
         }
 
         public ActionResult ReportePago()
         {
             List<Pago> pagos = new List<Pago>();
-            pagos = (List<Pago>)Session["pagos"];
+            pagos = (List<Pago>)TempData["pag"];
             return View(pagos);
         }
     }

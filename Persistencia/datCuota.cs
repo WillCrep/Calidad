@@ -76,9 +76,17 @@ namespace Persistencia
                     int ban = Convert.ToInt32(dr["periodo"]);
                     if (ban != 0){
                         Cuota cuota = new Cuota();
+                        Cliente cli = new Cliente();
                         Prestamo prestamo = new Prestamo();
                         cuota.idCuo = Convert.ToInt32(dr["idCuo"]);
                         prestamo.idPres = Convert.ToInt32(dr["idPrest"]);
+                        prestamo.cantCu = Convert.ToInt32(dr["cantCut"]);
+                        prestamo.fechaIni = Convert.ToDateTime(dr["fechaIni"]);
+                        prestamo.fechaTerm = Convert.ToDateTime(dr["fechaTerm"]);
+                        prestamo.monto = Convert.ToDecimal(dr["monto"]);
+                        prestamo.tea = Convert.ToDecimal(dr["tea"]);
+                        cli.idCli = Convert.ToInt32(dr["idClie"]);
+                        prestamo.cliente = cli;
                         cuota.prestamo = prestamo;
                         cuota.interes = Convert.ToDecimal(dr["interes"]);
                         cuota.amortizacion = Convert.ToDecimal(dr["amortizacion"]);

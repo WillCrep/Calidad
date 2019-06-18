@@ -23,10 +23,10 @@ namespace Persistencia
 
         #region Validar Prestamo
 
-        public Boolean ValPrestamo(int idCli)
+        public int ValPrestamo(int idCli)
         {
             SqlCommand cmd = null;
-            Boolean valido = false;
+            int valido = 2;
             try
             {
                 SqlConnection cn = Conexion.Instancia.conectar();
@@ -36,7 +36,7 @@ namespace Persistencia
                 cmd.Parameters.AddWithValue("@valido", 0).Direction = ParameterDirection.Output;
                 cn.Open();
                 cmd.ExecuteNonQuery();
-                valido = Convert.ToBoolean(cmd.Parameters["@valido"].Value);
+                valido = Convert.ToInt32(cmd.Parameters["@valido"].Value);
             }
             catch (Exception ex)
             {

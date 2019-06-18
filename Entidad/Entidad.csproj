@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Cliente.cs" />
     <Compile Include="Cuota.cs" />
+    <Compile Include="DetPago.cs" />
     <Compile Include="Pago.cs" />
     <Compile Include="Prestamo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

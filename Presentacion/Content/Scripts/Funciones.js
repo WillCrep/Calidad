@@ -20,7 +20,7 @@ function go2() {
                 window.location.href = "/Pago/PagarDeuda/?efec="+  encodeURIComponent(efectivo) + "&vuelt="+ encodeURIComponent(vuelto);
             }
         });
-}
+};
 
 function go() {
     swal({
@@ -36,7 +36,7 @@ function go() {
                 window.location.href = "/Prestamo/GuardarCronograma/";
             }
         });
-}
+};
 
 function val1() {
     var myJs = $('#to').val();

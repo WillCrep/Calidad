@@ -19,22 +19,27 @@ namespace Logica
 
         #endregion Singleton
 
-        public Boolean ValPrestamo(int idCli)
+        #region validarPrestamo
+        public int ValPrestamo(Cliente cli)
         {
             try
             {
-                return datPrestamo.Instancia.ValPrestamo(idCli);
+                return datPrestamo.Instancia.ValPrestamo(cli.idCli);
             }
             catch (Exception e)
             {
                 throw e;
             }
         }
+        #endregion validarPrestamo
 
+        #region registrarPrestamo
         public int RegistrarPrestamo(Prestamo prestamo)
         {
             try
             {
+                prestamo.fechaIni = DateTime.Now;
+                prestamo.fechaTerm = DateTime.Now.AddMonths(prestamo.cantCu);
                 return datPrestamo.Instancia.RegistrarPrestamo(prestamo);
             }
             catch (Exception e)
@@ -43,5 +48,7 @@ namespace Logica
                 throw e;
             }
         }
+        #endregion registrarPrestamo
+
     }
 }

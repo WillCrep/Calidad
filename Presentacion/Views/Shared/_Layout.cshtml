@@ -37,7 +37,24 @@
         $(function () {
             var ina = $('#viebagExi').val();
             var ino = $('#viebagVal').val();
-    if (ina == 2) {
+            var inoPa = $('#inoPa').val();
+            var v = $('#v').val();
+            console.log(v)
+            if (v == 1) {
+        swal({
+            title: "Error!!",
+            text: "El cliente no tiene ninguna deuda existente",
+            icon: "error",
+        });
+            }
+            if (inoPa == 2) {
+        swal({
+            title: "Error!!",
+            text: "El cliente no existe",
+            icon: "error",
+        });
+            }
+            if (ina == 2) {
         swal({
             title: "Error!!",
             text: "El cliente no existe",

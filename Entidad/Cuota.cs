@@ -23,5 +23,39 @@ namespace Entidad
         public Boolean estado { get; set; }
         public DateTime fechaPa { get; set; }
         public Prestamo prestamo { get; set; }
+        public int p { get; set; }
+
+        //METODOS
+
+
+        #region calculoDeIm
+        public decimal calculoDeIm(Cuota c)
+        {
+            decimal im = 0;
+            int dias = c.conteoDeDias(c);
+            im = (((decimal)Math.Pow(2.991, dias / 360)) - 1) * c.cuota;
+            return im;
+        }
+        #endregion calculoDeIm
+
+        #region calculoDeIcv
+        public decimal calculoIcv (Cuota c)
+        {
+            decimal icv = 0;
+            int dias = c.conteoDeDias(c);
+            icv = (((decimal)Math.Pow(1.4, dias / 360)) - 1) * c.cuota;
+            return icv;
+        }
+        #endregion calculoDeIcv
+
+        #region conteoDeDias
+        public int conteoDeDias (Cuota cuota)
+        {
+            int dias = 0;
+            TimeSpan d = DateTime.Now.Date - cuota.fechaPa.Date;
+            dias = Convert.ToInt32(d);
+            return dias;
+        }
+        #endregion conteoDeDias
     }
 }
