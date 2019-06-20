@@ -30,7 +30,7 @@ namespace Entidad
             p.idClin = c.prestamo.cliente;
             DetPago d = new DetPago();
             p.detPago = d;
-            return p;
+            return p; 
         }
 
         public Pago GenerarPagoMora (int id, List<Cuota> cuotas)
