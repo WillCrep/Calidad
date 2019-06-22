@@ -9,7 +9,7 @@ namespace Entidad
 {
     public class Cuota
     {
-        public int idCuo { get; set; }
+        public int idCuota { get; set; }
         [Required(ErrorMessage = "Este campo es Obligatorio")]
         public int periodo { get; set; }
         [Required(ErrorMessage = "Este campo es Obligatorio")]
@@ -21,8 +21,7 @@ namespace Entidad
         [Required(ErrorMessage = "Este campo es Obligatorio")]
         public decimal cuota { get; set; }
         public Boolean estado { get; set; }
-        public DateTime fechaPa { get; set; }
-        public Prestamo prestamo { get; set; }
+        public DateTime fechaPago { get; set; }
         public int p { get; set; }
 
         //METODOS
@@ -52,7 +51,7 @@ namespace Entidad
         public Double conteoDeDias (Cuota cuota)
         {
             double dias = 0;
-            TimeSpan d = DateTime.Now.Date - cuota.fechaPa.Date;
+            TimeSpan d = DateTime.Now.Date - cuota.fechaPago.Date;
             dias = d.Days;
             return dias;
         }

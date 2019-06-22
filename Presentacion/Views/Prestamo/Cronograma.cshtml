@@ -1,55 +1,55 @@
-﻿@model IEnumerable<Entidad.Cuota>
+﻿@model Entidad.Prestamo
 
 @{
     ViewBag.Title = "Cronograma";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <div>
-        <table class="table">
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                <p>Periodo</p>
+            </th>
+            <th>
+                <p>Saldo</p>
+            </th>
+            <th>
+                <p>Amortización</p>
+            </th>
+            <th>
+                <p>Interes</p>
+            </th>
+            <th>
+                <p>Cuota</p>
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var cuota in Model.cuotas)
+        {
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.periodo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.saldo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.amortizacion)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.interes)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.cuota)
-                </th>
-                <th></th>
+                <td>
+                    @Html.DisplayFor(modelItem => cuota.periodo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => cuota.saldo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => cuota.amortizacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => cuota.interes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => cuota.cuota)
+                </td>
             </tr>
+        }
 
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.periodo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.saldo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.amortizacion)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.interes)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.cuota)
-                    </td>
-                </tr>
-            }
-
-        </table>
-        <input type="submit" class="btn btn-block" value="Guardar préstamo" id="guardar" name="guardar" onclick="go()" />
-    </div>
+    </table>
+    <input type="submit" class="btn btn-block" value="Guardar préstamo" id="guardar" name="guardar" onclick="go()" />
+</div>
 
 <script>
     function go() {

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Entidad
 {
-    public class DetPago
+    public class DetallePago
     {
-        public int idDetPag { get; set; }
+        public int idDetPago { get; set; }
         public decimal efectivo { get; set; }
         public decimal vuelto { get; set; }
         public decimal iM { get; set; }

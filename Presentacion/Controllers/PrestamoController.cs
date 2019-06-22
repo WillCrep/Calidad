@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Entidad;
-using Logica;
+using Aplicacion;
 
 namespace Presentacion.Controllers
 {
@@ -40,12 +40,12 @@ namespace Presentacion.Controllers
         {
             try
             {
-                ViewBag.cliente = logCliente.Instancia.BusClienteDni(frm["dni"].ToString());
+                ViewBag.cliente = ClienteServicio.Instancia.BusClienteDni(frm["dni"].ToString());
                 if (ViewBag.cliente != null)
                 {
                     ViewBag.exito = 1;
-                    ViewBag.valido = logPrestamo.Instancia.ValPrestamo(ViewBag.cliente);
-                    Session["cli"] = ViewBag.cliente;
+                    ViewBag.valido = RealizarPrestamoServicio.Instancia.ValPrestamo(ViewBag.cliente);
+                    TempData["cli"] = ViewBag.cliente;
                     return View("ReaPres");
                 }
                 ViewBag.exito = 2;
@@ -57,30 +57,25 @@ namespace Presentacion.Controllers
             return View("ReaPres");
         }
 
-
+         
         public ActionResult Cronograma(Prestamo prestamo)
         {
-            List<Cuota> Cuotas = prestamo.GenerarCuotas(prestamo);
-            Session["cu"] = Cuotas;
-            Session["pre"] = prestamo;
-            return View(Cuotas);
+            prestamo.GenerarCuotas(prestamo);
+            TempData["pre"] = prestamo;
+            return View(prestamo);
         }
 
         public ActionResult GuardarCronograma()
         {
             try
             {
-                Prestamo prestamo = (Prestamo)Session["pre"];
-                Cliente cli = (Cliente)Session["cli"];
+                Prestamo prestamo = (Prestamo)TempData["pre"];
+                Cliente cli = (Cliente)TempData["cli"];
                 prestamo.cliente = cli;
-                List<Cuota> cuotas = new List<Cuota>();
-                cuotas = (List<Cuota>)Session["cu"];
-                int idPrestamo = logPrestamo.Instancia.RegistrarPrestamo(prestamo);
-                Boolean valido = logCuota.Instancia.RegistrarCuotas(cuotas, prestamo, idPrestamo);
+                Boolean valido = RealizarPrestamoServicio.Instancia.RegistrarPrestamoYCuotas(prestamo);
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
             return RedirectToAction("ReaPres", "Prestamo");

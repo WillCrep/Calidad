@@ -10,13 +10,13 @@ namespace Entidad
     public class Prestamo
     {
         //ENTIDADES
-        public int idPres { get; set; }
+        public int idPrestamo { get; set; }
         [Display(Name = "Fecha de Inicio")]
         [Required(ErrorMessage = "Este campo es Obligatorio")]
-        public DateTime fechaIni { get; set; }
+        public DateTime fechaInicio { get; set; }
         [Display(Name = "Fecha de Termino")]
         [Required(ErrorMessage = "Este campo es Obligatorio")]
-        public DateTime fechaTerm { get; set; }
+        public DateTime fechaTermino { get; set; }
         [Display(Name = "Monto a Prestar")]
         [Range(1000, 30000, ErrorMessage = "EL monto debe estar entre 1000 y 30000")]
         [Required(ErrorMessage = "Este campo es Obligatorio")]
@@ -28,8 +28,14 @@ namespace Entidad
         [Display(Name = "Cantidad de Cuotas")]
         [Range(3, 24, ErrorMessage = "Los periodos permitidos estan entre 3 y 24")]
         [Required(ErrorMessage = "Este campo es Obligatorio")]
-        public int cantCu { get; set; }
+        public int cantCuotas { get; set; }
         public Cliente cliente { get; set; }
+        public List<Cuota> cuotas { get; set; }
+
+        public Prestamo()
+        {
+            this.cuotas = new List<Cuota>();
+        }
 
         //METODOS
 
@@ -45,7 +51,7 @@ namespace Entidad
         public decimal calcularCuotaFijaMensual(Prestamo prestamo)
         {
             decimal i = calcularTasaEfectivaMensual(prestamo);
-            decimal a = prestamo.monto / ((1 - (decimal)Math.Pow(1 + (double)i, -prestamo.cantCu)) / i);
+            decimal a = prestamo.monto / ((1 - (decimal)Math.Pow(1 + (double)i, -prestamo.cantCuotas)) / i);
             return a;
         }
         #endregion calculoCuotaFijaMensual
@@ -72,13 +78,12 @@ namespace Entidad
         #endregion calcularAmortizacion
 
         #region GenerarCuotas
-        public List<Cuota> GenerarCuotas(Prestamo prestamo)
+        public void GenerarCuotas(Prestamo prestamo)
         {
             decimal a = calcularCuotaFijaMensual(prestamo);
             decimal i = calcularTasaEfectivaMensual(prestamo);
             decimal s = prestamo.monto;
-            List<Cuota> cuotas = new List<Cuota>();
-            for (int w = 0; w < prestamo.cantCu + 1; w++)
+            for (int w = 0; w < prestamo.cantCuotas + 1; w++)
             {
                 Cuota cuota = new Cuota();
                 Cuota cuotaT = new Cuota();
@@ -89,8 +94,8 @@ namespace Entidad
                     cuota.cuota = 0;
                     cuota.interes = 0;
                     cuota.amortizacion = 0;
-                    cuota.fechaPa = DateTime.Now;
-                    cuotas.Add(cuota);
+                    cuota.fechaPago = DateTime.Now;
+                    prestamo.cuotas.Add(cuota);
                 }
                 else
                 {
@@ -98,18 +103,17 @@ namespace Entidad
                     cuotaT.saldo = cuotas[w - 1].saldo;
                     cuotaT.interes = cuotas[w - 1].interes;
                     cuotaT.amortizacion = cuotas[w - 1].amortizacion;
-                    cuotaT.fechaPa = cuotas[w - 1].fechaPa;
+                    cuotaT.fechaPago = cuotas[w - 1].fechaPago;
 
                     cuota.cuota = a;
                     cuota.periodo = w;
                     cuota.interes = calcularInteres(i, cuotaT.saldo);
                     cuota.amortizacion = calcularAmortizacion(a, cuota.interes);
                     cuota.saldo = calcularSaldo(cuota.amortizacion, cuotaT.saldo);
-                    cuota.fechaPa = cuotaT.fechaPa.AddMonths(1);
-                    cuotas.Add(cuota);
+                    cuota.fechaPago = cuotaT.fechaPago.AddMonths(1);
+                    prestamo.cuotas.Add(cuota);
                 }
             }
-            return cuotas;
         }
         #endregion GenerarCuotas
     }

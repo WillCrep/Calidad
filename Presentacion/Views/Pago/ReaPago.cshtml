@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Entidad.Cuota>
+﻿@model Entidad.Prestamo
+
 @{
     ViewBag.Title = "ReaPago";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -15,49 +16,48 @@
     </div>
 </form>
 
-<input type="hidden" value="@ViewBag.exito" id="inoPa"/>
+<input type="hidden" value="@ViewBag.exito" id="inoPa" />
 <input type="hidden" value="@ViewBag.v" id="v" />
 @if (ViewBag.exito == 1)
 
-    {
-        <div>
-            <table class="table">
+{
+    <div>
+        <table class="table">
+            <tr>
+                <th>
+                    Número de cuota
+                </th>
+                <th>
+                    <p>Pago del mes</p>
+                </th>
+                <th>
+                    Fecha de pago
+                </th>
+            </tr>
+
+            @foreach (var cuota in Model.cuotas)
+            {
                 <tr>
-                    <th>
-                        Número de cuota
-                    </th>
-                    <th>
-                        <p>Pago del mes</p>
-                    </th>
-                    <th>
-                        Fecha de pago
-                    </th>
+                    <td>
+                        @Html.DisplayFor(modelItem => cuota.periodo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => cuota.cuota)
+                    </td>
+                    <td>
+                        @Html.ValueFor(modelItem => cuota.fechaPago, "{0:dd/MM/yyyy}")
+                    </td>
+                    <td>
+                        @if (cuota.p == 1)
+                        {
+                            <a href="@Url.Action("VerificarDeudas","Pago", new {idCu=cuota.idCuota })"><input type="button" class="btn btn-dark" value="Pagar Cuota" /></a>
+                        }
+                    </td>
                 </tr>
+            }
 
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.periodo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.cuota)
-                        </td>
-                        <td>
-                            @Html.ValueFor(modelItem => item.fechaPa, "{0:dd/MM/yyyy}")
-                        </td>
-                        <td>
-                            @if (item.p == 1)
-                            {
-                                <a href="@Url.Action("VerificarDeudas","Pago", new {idCu=item.idCuo })"><input type="button" class="btn btn-dark" value="Pagar Cuota" /></a>
-                            }
-                        </td>
-                    </tr>
-                }
-
-            </table>
-        </div>
+        </table>
+    </div>
 
 
 }
-

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Entidad;
-using Logica;
+using Aplicacion;
 
 namespace Presentacion.Controllers
 {
@@ -15,19 +15,18 @@ namespace Presentacion.Controllers
         {
             if (TempData["dni"]!=null)
             {
-                List<Cuota> cuotas = new List<Cuota>();
-                cuotas = logCuota.Instancia.LsCuotas(TempData["dni"].ToString());
-                cuotas = logCuota.Instancia.cuotasApagar(cuotas);
+                List<Prestamo> prestamos = RealizarPagoServicio.Instancia.ObtenerPrestamoAPagar(TempData["dni"].ToString());
+                Prestamo prestamo = RealizarPagoServicio.Instancia.VerificarCuotasAtrasadas(prestamos);
                 ViewBag.exito = 1;
-                if (cuotas != null)
+                if (prestamo != null)
                 {
-                    TempData["cuotas"] = cuotas;
+                    TempData["prestamo"] = prestamo;
                 }
                 else
                 {
                     ViewBag.v = 1;
                 }
-                return View(cuotas);
+                return View(prestamo);
             }
             else
             {
@@ -41,7 +40,7 @@ namespace Presentacion.Controllers
             {
                 Cliente cli = new Cliente();
                 String dni = frm["dni"].ToString();
-                cli = logCliente.Instancia.BusClienteDni(dni);
+                cli = ClienteServicio.Instancia.BusClienteDni(dni);
                 if (cli != null)
                 {
                     TempData["dni"] = dni;
@@ -62,9 +61,9 @@ namespace Presentacion.Controllers
 
         public ActionResult VerificarDeudas(int idCu)
         {
-            List<Cuota> cuotas = (List<Cuota>)TempData["cuotas"];
-            TempData["cuotas"] = cuotas;
-            List<int> cuo = logCuota.Instancia.VerificarCuota(cuotas);
+            Prestamo prestamo = (Prestamo)TempData["prestamo"];
+            TempData["prestamo"] = prestamo;
+            List<int> cuo = RealizarPagoServicio.Instancia.ObtenerIdsDeCuotasAtrasadas(prestamo);
             if(cuo.Count > 1)
             {
 
@@ -80,15 +79,14 @@ namespace Presentacion.Controllers
 
         public ActionResult FormPago ()
         {
-            List<Cuota> cuotas = (List<Cuota>)TempData["cuotas"];
+            Prestamo prestamo = (Prestamo)TempData["prestamo"];
             List<Pago> pagos = new List<Pago>();
             if (Convert.ToInt32(TempData["pa"]) == 0)
             {
-                Cuota c = logCuota.Instancia.cuotaUnitaria(cuotas);
                 Pago p = new Pago();
-                p = p.GenerarPago(c);
+                p = p.GenerarPago(prestamo);
                 pagos.Add(p);
-                ViewBag.total = c.cuota;
+                ViewBag.total = prestamo.cuotas[0].cuota;
             }
             else
             {
@@ -97,11 +95,11 @@ namespace Presentacion.Controllers
                 for (int i =0; i < c; i++)
                 {
                     Pago p = new Pago();
-                    p = p.GenerarPagoMora(cuos[i], cuotas);
+                    p = p.GenerarPagoMora(cuos[i], prestamo);
                     pagos.Add(p);
                 }
-                ViewBag.total = logPago.Instancia.totalPagoVariasCuotas(pagos);
-                ViewBag.mora = logPago.Instancia.totalPagoMora(pagos);
+                ViewBag.total = RealizarPagoServicio.Instancia.totalPagoVariasCuotas(pagos);
+                ViewBag.mora = RealizarPagoServicio.Instancia.totalPagoMora(pagos);
             }
             TempData["pag"] = pagos;
             return View();
@@ -119,17 +117,17 @@ namespace Presentacion.Controllers
                     foreach (var item in pagos)
                     {
                         p = item;
-                        p.detPago.efectivo = Convert.ToDecimal(efec);
-                        p.detPago.vuelto = Convert.ToDecimal(vuelt);
-                        Boolean val = logPago.Instancia.GuardarPago(p);
+                        p.detallePago.efectivo = Convert.ToDecimal(efec);
+                        p.detallePago.vuelto = Convert.ToDecimal(vuelt);
+                        Boolean val = RealizarPagoServicio.Instancia.GuardarPago(p);
                     }
                 }
                 else
                 {
                     p = pagos[0];
-                    p.detPago.efectivo = Convert.ToDecimal(efec);
-                    p.detPago.vuelto = Convert.ToDecimal(vuelt);
-                    Boolean val = logPago.Instancia.GuardarPago(p);
+                    p.detallePago.efectivo = Convert.ToDecimal(efec);
+                    p.detallePago.vuelto = Convert.ToDecimal(vuelt);
+                    Boolean val = RealizarPagoServicio.Instancia.GuardarPago(p);
                 }
             }
             catch (Exception ex)

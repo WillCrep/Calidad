@@ -9,47 +9,56 @@ namespace Entidad
 {
     public class Pago
     {
-        public int idPag { get; set; }
+        public int idPago { get; set; }
         [Required(ErrorMessage = "Este campo es Obligatorio")]
         public DateTime fechaPago { get; set; }
         public decimal mora { get; set; }
         [Required(ErrorMessage = "Este campo es Obligatorio")]
         public decimal total { get; set; }
-        public Cliente idClin { get; set; }
-        public Prestamo idPres { get; set; }
-        public Cuota idCuot { get; set; }
-        public DetPago detPago { get; set; }
+        public Cliente cliente { get; set; }
+        public Prestamo prestamo { get; set; }
+        public Cuota cuota { get; set; }
+        public DetallePago detallePago { get; set; }
 
-        public Pago GenerarPago(Cuota c)
+        public Pago GenerarPago(Prestamo prestamo)
         {
+            Cuota c = new Cuota();
+            foreach (var cuota in prestamo.cuotas)
+            {
+                if (cuota.p == 1)
+                {
+                    c = cuota;
+                    break;
+                }
+            }
             Pago p = new Pago();
             p.fechaPago = DateTime.Now.Date;
             p.total = c.cuota;
-            p.idCuot = c;
-            p.idPres = c.prestamo;
-            p.idClin = c.prestamo.cliente;
-            DetPago d = new DetPago();
-            p.detPago = d;
+            p.cuota = c;
+            p.prestamo = prestamo;
+            p.cliente = prestamo.cliente;
+            DetallePago d = new DetallePago();
+            p.detallePago = d;
             return p; 
         }
 
-        public Pago GenerarPagoMora (int id, List<Cuota> cuotas)
+        public Pago GenerarPagoMora (int id, Prestamo prestamo)
         {
             Pago p = new Pago();
-            foreach (var item in cuotas)
+            foreach (var cuota in prestamo.cuotas)
             {
-                if(item.idCuo == id)
+                if(cuota.idCuota == id)
                 {
                     p.fechaPago = DateTime.Now.Date;
-                    p.idCuot = item;
-                    p.idPres = item.prestamo;
-                    p.idClin = item.prestamo.cliente;
-                    DetPago d = new DetPago();
-                    d.iCv = item.calculoIcv(item);
-                    d.iM = item.calculoDeIm(item);
-                    p.detPago = d;
+                    p.cuota = cuota;
+                    p.prestamo = prestamo;
+                    p.cliente = prestamo.cliente;
+                    DetallePago d = new DetallePago();
+                    d.iCv = cuota.calculoIcv(cuota);
+                    d.iM = cuota.calculoDeIm(cuota);
+                    p.detallePago = d;
                     p.mora = d.iM + d.iCv;
-                    p.total = item.cuota + p.mora;
+                    p.total = cuota.cuota + p.mora;
                     break;
                 }
             }

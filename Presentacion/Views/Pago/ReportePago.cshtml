@@ -12,7 +12,7 @@
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.idCuot.periodo)
+                @Html.DisplayNameFor(model => model.cuota.periodo)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.fechaPago)
@@ -30,7 +30,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.idCuot.periodo)
+                    @Html.DisplayFor(modelItem => item.cuota.periodo)
                 </td>
                 <td>
                     @Html.ValueFor(modelItem => item.fechaPago, "{0:dd/MM/yyyy}")

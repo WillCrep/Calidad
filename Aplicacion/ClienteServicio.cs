@@ -3,24 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entidad;
 using Persistencia;
+using Entidad;
 
-namespace Logica
+namespace Aplicacion
 {
-    public class logCliente
+    public class ClienteServicio
     {
         #region Singleton
-        private static readonly logCliente _instancia = new logCliente();
-        public static logCliente Instancia
+        private static readonly ClienteServicio _instancia = new ClienteServicio();
+        public static ClienteServicio Instancia
         {
-            get { return logCliente._instancia; }
+            get { return ClienteServicio._instancia; }
         }
 
         #endregion Singleton
 
-        #region logica
-
+        #region BuscarClienteDni
         public Cliente BusClienteDni(String dni)
         {
             try
@@ -33,9 +32,6 @@ namespace Logica
                 throw e;
             }
         }
-
-
-
-        #endregion logica
+        #endregion BuscarClienteDni
     }
 }

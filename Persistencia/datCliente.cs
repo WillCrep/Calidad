@@ -36,7 +36,7 @@ namespace Persistencia
                 if (dr.Read())
                 {
                     cli = new Cliente();
-                    cli.idCli = Convert.ToInt32(dr["idCli"]);
+                    cli.idCliente = Convert.ToInt32(dr["idCli"]);
                     cli.nombres = dr["nombres"].ToString();
                     cli.apellidos = dr["apellidos"].ToString();
                     cli.dni = dr["dni"].ToString();

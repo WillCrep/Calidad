@@ -19,7 +19,7 @@ namespace Persistencia
         public SqlConnection conectar()
         {
             SqlConnection cn = new SqlConnection();
-            cn.ConnectionString = "Data Source=DESKTOP-NKCK5M8; Initial Catalog=prestamo5; Integrated Security=true";
+            cn.ConnectionString = "Data Source=DESKTOP-74GDALA; Initial Catalog=prestamo5; Integrated Security=true";
 
             return cn;
         }

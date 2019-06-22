@@ -9,7 +9,7 @@ namespace Entidad
 {
     public class Cliente
     {
-        public int idCli { get; set; }
+        public int idCliente { get; set; }
         [Required]
         public String nombres { get; set; }
         [Required]
