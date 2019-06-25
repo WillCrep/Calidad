@@ -18,11 +18,11 @@ namespace Entidad
         [Required(ErrorMessage = "Este campo es Obligatorio")]
         public DateTime fechaTermino { get; set; }
         [Display(Name = "Monto a Prestar")]
-        [Range(1000, 30000, ErrorMessage = "EL monto debe estar entre 1000 y 30000")]
+        [Range(1000, 30000, ErrorMessage = "El monto debe estar entre 1000 y 30000")]
         [Required(ErrorMessage = "Este campo es Obligatorio")]
         public decimal monto { get; set; }
         [Display(Name = "TEA")]
-        [Range(0.10, 0.21, ErrorMessage = "La TEA permitida esta entre 0.10 y 0.20")]
+        [Range(0.10, 0.20, ErrorMessage = "La TEA permitida esta entre 0.10 y 0.20")]
         [Required(ErrorMessage = "Este campo es Obligatorio")]
         public decimal tea { get; set; }
         [Display(Name = "Cantidad de Cuotas")]

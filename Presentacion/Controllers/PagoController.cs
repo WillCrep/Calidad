@@ -98,8 +98,8 @@ namespace Presentacion.Controllers
                     p = p.GenerarPagoMora(cuos[i], prestamo);
                     pagos.Add(p);
                 }
-                ViewBag.total = RealizarPagoServicio.Instancia.totalPagoVariasCuotas(pagos);
-                ViewBag.mora = RealizarPagoServicio.Instancia.totalPagoMora(pagos);
+                ViewBag.total = Math.Round(RealizarPagoServicio.Instancia.totalPagoVariasCuotas(pagos),2);
+                ViewBag.mora = Math.Round(RealizarPagoServicio.Instancia.totalPagoMora(pagos),2);
             }
             TempData["pag"] = pagos;
             return View();
